@@ -27,7 +27,7 @@ set :repo_url, "git@github.com:cho-cloud-cloud/testapp.git"
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
 
 # Default value for default_env is {}
-# set :default_env, { path: '/path'}
+set :default_env, { SECRET_KEY_BASE: 'a'}
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
