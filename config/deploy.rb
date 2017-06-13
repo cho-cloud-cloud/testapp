@@ -34,7 +34,7 @@ set :repo_url, "git@github.com:cho-cloud-cloud/testapp.git"
 
 server '192.168.33.11', port: 22, roles: [:web, :app, :db], primary: true
 
-set :user,            'deploy'
+set :user,            'vagrant'
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
 
