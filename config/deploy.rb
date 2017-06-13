@@ -77,11 +77,10 @@ namespace :deploy do
     end
   end
 
-=begin
   desc 'Initial Deploy'
   task :initial do
     on roles(:app) do
-      before 'puma:start'
+      before 'deploy:restart', 'puma:start'
       invoke 'deploy'
     end
   end
@@ -92,11 +91,11 @@ namespace :deploy do
       invoke 'puma:restart'
     end
   end
-=end
+
   before :starting,     :check_revision
   after  :finishing,    :compile_assets
   after  :finishing,    :cleanup
-  #after  :finishing,    :restart
+  after  :finishing,    :restart
 end
 
 # ps aux | grep puma    # Get puma pid
