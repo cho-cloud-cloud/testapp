@@ -34,7 +34,7 @@ set :default_env, { SECRET_KEY_BASE: 'a'}
 
 server '192.168.33.11', port: 22, roles: [:web, :app, :db], primary: true
 
-set :user,            'vagrant'
+set :user,            'deploy'
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
 
@@ -85,14 +85,6 @@ namespace :deploy do
     end
   end
 
-  desc 'npm install && webpack build'
-  task :npm_webpack do
-    on roles(:app) do
-      execute "cd '#{release_path}/public'; touch test"
-      execute "cd '#{release_path}'; touch test"
-    end
-  end
-
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -102,7 +94,6 @@ namespace :deploy do
 
   before :starting,     :check_revision
   after  :finishing,    :compile_assets
-  after  :finishing,    :npm_webpack
   after  :finishing,    :cleanup
   after  :finishing,    :restart
 end
