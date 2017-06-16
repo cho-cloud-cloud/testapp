@@ -26,5 +26,5 @@ production:
   adapter: postgresql
   encoding: unicode
   database: testapp_production
-  username: vagrant
+  username: deploy
   password: password
