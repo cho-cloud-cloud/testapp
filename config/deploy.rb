@@ -53,8 +53,8 @@ set :puma_preload_app, true
 set :puma_worker_timeout, nil
 set :puma_init_active_record, true  # Change to false when not using ActiveRecord
 
-#set :nginx_template, "/home/#{fetch(:user)}/apps/#{fetch(:application)}/current/config/nginx.conf"
-#set :nginx_sites_enabled_dir, "/etc/nginx/sites-enabled"
+set :nginx_template, "/home/#{fetch(:user)}/apps/#{fetch(:application)}/current/config/nginx.conf"
+set :nginx_sites_enabled_dir, "/etc/nginx/sites-enabled"
 
 namespace :puma do
   desc 'Create Directories for Puma Pids and Socket'
@@ -91,8 +91,8 @@ namespace :deploy do
   desc 'Nginx link'
   task :nginx_link do
     on roles(:app) do
-      execute "sudo rm /etc/nginx/sites-enabled/default"
-      execute "sudo ln -nfs '/home/#{fetch(:user)}/apps/#{fetch(:application)}/current/config/nginx.conf' '/etc/nginx/sites-enabled/#{fetch(:application)}'"
+      execute "sudo rm #{nginx_sites_enabled_dir}/default"
+      execute "sudo ln -nfs #{nginx_template}"
       invoke 'nginx:restart'
     end
   end
