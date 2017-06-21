@@ -53,6 +53,9 @@ set :puma_preload_app, true
 set :puma_worker_timeout, nil
 set :puma_init_active_record, true  # Change to false when not using ActiveRecord
 
+#set :nginx_template, "/home/#{fetch(:user)}/apps/#{fetch(:application)}/current/config/nginx.conf"
+#set :nginx_sites_enabled_dir, "/etc/nginx/sites-enabled"
+
 namespace :puma do
   desc 'Create Directories for Puma Pids and Socket'
   task :make_dirs do
@@ -80,22 +83,24 @@ namespace :deploy do
   desc 'Initial Deploy'
   task :initial do
     on roles(:app) do
-      before 'deploy:restart', 'puma:start'
+      before 'puma:start'
       invoke 'deploy'
     end
   end
 
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      invoke 'puma:start'
+  desc 'Nginx link'
+  task :nginx_link do
+    on roles(:app) do
+      execute "sudo rm /etc/nginx/sites-enabled/default"
+      execute "sudo ln -nfs '/home/#{fetch(:user)}/apps/#{fetch(:application)}/current/config/nginx.conf' '/etc/nginx/sites-enabled/#{fetch(:application)}'"
+      invoke 'nginx:restart'
     end
   end
 
   before :starting,     :check_revision
   after  :finishing,    :compile_assets
+  after  :finishing,    :nginx_link
   after  :finishing,    :cleanup
-  after  :finishing,    :restart
 end
 
 # ps aux | grep puma    # Get puma pid
