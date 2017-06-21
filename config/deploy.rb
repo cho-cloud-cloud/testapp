@@ -91,8 +91,8 @@ namespace :deploy do
   desc 'Nginx link'
   task :nginx_link do
     on roles(:app) do
-      execute "sudo rm #{nginx_sites_enabled_dir}/default"
-      execute "sudo ln -nfs #{nginx_template}"
+      execute "sudo rm -rf #{fetch(:nginx_sites_enabled_dir)}/default"
+      execute "sudo ln -nfs #{fetch(:nginx_template)} #{fetch(:nginx_sites_enabled_dir)}/#{fetch(:application)}"
       invoke 'nginx:restart'
     end
   end
